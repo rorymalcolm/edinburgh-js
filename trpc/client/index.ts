@@ -15,6 +15,8 @@ async function main() {
   });
   const userFetched = await trpc.userById.query(user.id);
   console.log(
-    `Do we have the same user? ${user.id === userFetched.id ? "Yes!" : "No :("}`
+    `Do we have the same user name? ${
+      user.name === userFetched.name ? "Yes!" : "No :("
+    }`
   );
 }
