@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Events {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  date        DateTime
+  location    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  Talk        Talk[]
+}
+
+model Talk {
+  id        Int      @id @default(autoincrement())
+  title     String
+  abstract  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  event     Events?  @relation(fields: [eventId], references: [id])
+  eventId   Int?
+  Speaker   Speaker? @relation(fields: [speakerId], references: [id])
+  speakerId Int?
+}
+
+model Speaker {
+  id        Int      @id @default(autoincrement())
+  name      String
+  bio       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  talks     Talk[]
+}
