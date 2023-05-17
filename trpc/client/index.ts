@@ -10,8 +10,11 @@ const trpc = createTRPCProxyClient<AppRouter>({
 });
 
 async function main() {
-  await trpc.userById.query("1");
   const user = await trpc.userCreate.mutate({
     name: "Rory",
   });
+  const userFetched = await trpc.userById.query(user.id);
+  console.log(
+    `Do we have the same user? ${user.id === userFetched.id ? "Yes!" : "No :("}`
+  );
 }
