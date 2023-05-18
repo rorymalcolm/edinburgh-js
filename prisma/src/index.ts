@@ -3,7 +3,33 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
-  const edinburghJs = await prisma.events.create({
+  seedDb();
+  const talk = await prisma.talk.findFirst();
+  if (!talk) {
+    throw new Error("No talks found");
+  }
+  // the data we receive back from Prisma is typed correctly
+  console.log(talk.title);
+  // but we can still do whatever we want with it
+  console.log(talk.title.toUpperCase());
+  const spongebobifiedTitle = spongebobify(talk.title);
+  console.log(spongebobifiedTitle);
+}
+
+function spongebobify(input: string): string {
+  return input
+    .split("")
+    .map((char, index) => {
+      if (index % 2 === 0) {
+        return char.toUpperCase();
+      }
+      return char.toLowerCase();
+    })
+    .join("");
+}
+
+async function seedDb() {
+  const event = await prisma.events.create({
     data: {
       name: "EdinburghJS",
       description: "Edinburgh's monthly meetup for JavaScript developers",
@@ -17,18 +43,15 @@ async function main() {
       bio: "Rory is a software engineer giving his first talk at EdinburghJS",
     },
   });
-  const talk = await prisma.talk.create({
+  await prisma.talk.create({
     data: {
       title: "Full Stack Type Safety!",
       abstract:
         "A talk about how to use TypeScript to ensure type safety across your entire stack",
-      eventId: edinburghJs.id,
+      eventId: event.id,
       speakerId: speaker.id,
     },
   });
-  console.log(
-    `${talk.title} by ${speaker.name} on ${edinburghJs.date} created!`
-  );
 }
 
 main()
