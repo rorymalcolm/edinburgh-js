@@ -12,6 +12,7 @@ async function main() {
   console.log(talk.title);
   // but we can still do whatever we want with it
   console.log(talk.title.toUpperCase());
+  // we can even pass it to a function that expects a string
   const spongebobifiedTitle = spongebobify(talk.title);
   console.log(spongebobifiedTitle);
 }
